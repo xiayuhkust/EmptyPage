@@ -1,5 +1,5 @@
-import { createContext, useContext, PropsWithChildren } from 'react';
-import { createConfig, WagmiConfig, useConnect as useWagmiConnect } from 'wagmi';
+import { PropsWithChildren } from 'react';
+import { createConfig, WagmiConfig } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { InjectedConnector } from 'wagmi/connectors/injected';
@@ -27,10 +27,6 @@ const config = createConfig({
 
 const queryClient = new QueryClient();
 
-type ConnectionContextType = ReturnType<typeof useWagmiConnect>;
-
-const ConnectionContext = createContext<ConnectionContextType | undefined>(undefined);
-
 export function ConnectionProvider({ children }: PropsWithChildren) {
   return (
     <WagmiConfig config={config}>
@@ -39,12 +35,4 @@ export function ConnectionProvider({ children }: PropsWithChildren) {
       </QueryClientProvider>
     </WagmiConfig>
   );
-}
-
-export function useConnect() {
-  const context = useContext(ConnectionContext);
-  if (!context) {
-    throw new Error('useConnect must be used within a ConnectionProvider');
-  }
-  return context;
 }

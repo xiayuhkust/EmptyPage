@@ -1,12 +1,21 @@
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
+import { useCallback } from 'react';
 
 export function WalletConnectButton() {
   const { address, isConnected } = useAccount();
-  const { connect, isLoading } = useConnect({
+  const { connect, isLoading, error } = useConnect({
     connector: new InjectedConnector(),
   });
   const { disconnect } = useDisconnect();
+
+  const handleConnect = useCallback(() => {
+    try {
+      connect();
+    } catch (err) {
+      console.error('Failed to connect:', err);
+    }
+  }, [connect]);
 
   if (isConnected && address) {
     return (
@@ -20,16 +29,23 @@ export function WalletConnectButton() {
   }
 
   return (
-    <button
-      onClick={() => connect()}
-      disabled={isLoading}
-      className={`px-4 py-2 ${
-        isLoading 
-          ? 'bg-gray-400 cursor-not-allowed' 
-          : 'bg-blue-500 hover:bg-blue-600'
-      } text-white rounded transition-colors`}
-    >
-      {isLoading ? 'Connecting...' : 'Connect MetaMask'}
-    </button>
+    <div className="flex flex-col items-center">
+      <button
+        onClick={handleConnect}
+        disabled={isLoading}
+        className={`px-4 py-2 ${
+          isLoading 
+            ? 'bg-gray-400 cursor-not-allowed' 
+            : 'bg-blue-500 hover:bg-blue-600'
+        } text-white rounded transition-colors`}
+      >
+        {isLoading ? 'Connecting...' : 'Connect MetaMask'}
+      </button>
+      {error && (
+        <p className="mt-2 text-red-500 text-sm">
+          {error.message}
+        </p>
+      )}
+    </div>
   );
 }

@@ -1,7 +1,8 @@
+import { FC } from 'react';
 import { ConnectionProvider } from './providers/ConnectionProvider';
 import { WalletConnectButton } from './components/WalletConnect';
 
-function App() {
+const App: FC = () => {
   return (
     <ConnectionProvider>
       <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
@@ -10,6 +11,6 @@ function App() {
       </div>
     </ConnectionProvider>
   );
-}
+};
 
 export default App;
