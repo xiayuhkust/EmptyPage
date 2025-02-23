@@ -1,29 +1,43 @@
 import { createContext, useContext, PropsWithChildren } from 'react';
-import { createConfig, WagmiProvider, useConnect as useWagmiConnect } from 'wagmi';
+import { createConfig, WagmiConfig, useConnect as useWagmiConnect } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { injected } from 'wagmi/connectors';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { publicProvider } from 'wagmi/providers/public';
+import { configureChains } from 'wagmi';
+
+const { chains, publicClient } = configureChains(
+  [mainnet],
+  [publicProvider()]
+);
 
 const config = createConfig({
-  chains: [mainnet],
-  connectors: [injected()]
+  autoConnect: true,
+  publicClient,
+  connectors: [
+    new InjectedConnector({
+      chains,
+      options: {
+        name: 'MetaMask',
+        shimDisconnect: true,
+      },
+    }),
+  ],
 });
 
 const queryClient = new QueryClient();
 
-const ConnectionContext = createContext<ReturnType<typeof useWagmiConnect> | undefined>(undefined);
+type ConnectionContextType = ReturnType<typeof useWagmiConnect>;
+
+const ConnectionContext = createContext<ConnectionContextType | undefined>(undefined);
 
 export function ConnectionProvider({ children }: PropsWithChildren) {
-  const connection = useWagmiConnect();
-
   return (
-    <WagmiProvider config={config}>
+    <WagmiConfig config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectionContext.Provider value={connection}>
-          {children}
-        </ConnectionContext.Provider>
+        {children}
       </QueryClientProvider>
-    </WagmiProvider>
+    </WagmiConfig>
   );
 }
 
