@@ -1,0 +1,39 @@
+{
+  "name": "emptypage",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "wagmi": "^2.5.7",
+    "viem": "^2.7.9",
+    "@tanstack/react-query": "^5.18.1",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
